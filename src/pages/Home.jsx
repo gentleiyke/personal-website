@@ -365,7 +365,7 @@ export default function Home() {
                 <a href={repo.url} target="_blank" rel="noreferrer" className="project-card-link">
                   <div className="modern-project-card">
                     <div className="card-thumbnail">
-                      <img src="https://via.placeholder.com/80x80/0F172A/06B6D4?text=Project" alt="Project thumbnail" />
+                      <img src="src/assets/portfolio-image.png" alt="Project thumbnail" />
                     </div>
                     <div className="card-content">
                       <h5 className="card-title">{repo.name}</h5>

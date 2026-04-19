@@ -164,10 +164,10 @@ export default function Projects() {
                     >
                       <div className="card-thumbnail">
                         <img
-                          src={repo.thumbnail || "https://via.placeholder.com/80x80/0F172A/06B6D4?text=Project"}
+                          src={repo.thumbnail || "src/assets/portfolio-image.png"}
                           alt="Project thumbnail"
                           onError={(e) => {
-                            e.currentTarget.src = "https://via.placeholder.com/80x80/0F172A/06B6D4?text=Project";
+                            e.currentTarget.src = "src/assets/portfolio-image.png";
                           }}
                         />
                       </div>
