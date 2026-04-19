@@ -29,6 +29,13 @@ const skills = [
   { name: "React", level: 75 },
   { name: "Node.js", level: 70 },
   { name: "MySQL", level: 85 },
+  { name: "SQL", level: 85 },
+  { name: "Python", level: 80 },
+  { name: "R", level: 75 },
+  { name: "Machine Learning", level: 70 },
+  { name: "Statistical Analysis", level: 80 },
+  { name: "Data Modelling", level: 85 },
+  { name: "Predictive Modelling", level: 75 },
 ];
 
 const coreCompetencies = [
@@ -37,6 +44,15 @@ const coreCompetencies = [
   "Hosting & infrastructure",
   "Performance optimization",
   "Mentorship & training",
+  "Healthcare Analytics",
+  "Data Quality",
+  "Healthcare Informatics",
+  "Research Writing",
+  "Genomics",
+  "Bioinformatics",
+  "Stakeholder Management",
+  "Training and Facilitation",
+  "Data Storytelling",
 ];
 
 const techStack = [
@@ -48,6 +64,12 @@ const techStack = [
   "Bootstrap",
   "MongoDB",
   "Git",
+  "Power BI",
+  "Tableau",
+  "Microsoft Excel",
+  "Microsoft Fabric",
+  "Python",
+  "R",
 ];
 
 const achievements = [
@@ -234,18 +256,21 @@ export default function Home() {
                   I help businesses and individuals build elegant websites, web applications, data tools, and managed hosting systems with a strong focus on performance and reliability.
                 </p>
                 <h5 className="mb-3">Core Competencies</h5>
-                <ul className="list-unstyled text-muted-custom mb-4 competence-list">
-                  {coreCompetencies.map((item) => (
-                    <li key={item}>• {item}</li>
-                  ))}
-                </ul>
-                <h5 className="mb-3">Tech Stack</h5>
-                <div className="d-flex flex-wrap gap-2 stack-list">
-                  {techStack.map((item) => (
-                    <span key={item} className="badge badge-soft">
-                      {item}
-                    </span>
-                  ))}
+                <div className="row">
+                  <div className="col-6">
+                    <ul className="list-unstyled text-muted-custom mb-4 competence-list">
+                      {coreCompetencies.slice(0, Math.ceil(coreCompetencies.length / 2)).map((item) => (
+                        <li key={item}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="col-6">
+                    <ul className="list-unstyled text-muted-custom mb-4 competence-list">
+                      {coreCompetencies.slice(Math.ceil(coreCompetencies.length / 2)).map((item) => (
+                        <li key={item}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -253,24 +278,56 @@ export default function Home() {
             <div className="col-lg-6">
               <div className="glass-card p-4">
                 <h2 className="fw-bold mb-3">Skills</h2>
-                {skills.map((skill) => (
-                  <div key={skill.name} className="mb-3">
-                    <div className="d-flex justify-content-between mb-1">
-                      <span>{skill.name}</span>
-                      <span>{skill.level}%</span>
-                    </div>
-                    <div className="progress skill-progress">
-                      <div
-                        className="progress-bar bg-info"
-                        role="progressbar"
-                        style={{ width: `${skill.level}%` }}
-                        aria-valuenow={skill.level}
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      />
-                    </div>
+                <div className="row">
+                  <div className="col-6">
+                    {skills.slice(0, Math.ceil(skills.length / 2)).map((skill) => (
+                      <div key={skill.name} className="mb-2">
+                        <div className="d-flex justify-content-between mb-1">
+                          <span>{skill.name}</span>
+                          <span>{skill.level}%</span>
+                        </div>
+                        <div className="progress skill-progress">
+                          <div
+                            className="progress-bar"
+                            role="progressbar"
+                            style={{ width: `${skill.level}%` }}
+                            aria-valuenow={skill.level}
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                  <div className="col-6">
+                    {skills.slice(Math.ceil(skills.length / 2)).map((skill) => (
+                      <div key={skill.name} className="mb-2">
+                        <div className="d-flex justify-content-between mb-1">
+                          <span>{skill.name}</span>
+                          <span>{skill.level}%</span>
+                        </div>
+                        <div className="progress skill-progress">
+                          <div
+                            className="progress-bar"
+                            role="progressbar"
+                            style={{ width: `${skill.level}%` }}
+                            aria-valuenow={skill.level}
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <h5 className="mb-3 mt-4">Tech Stack</h5>
+                <div className="d-flex flex-wrap gap-2 stack-list">
+                  {techStack.map((item) => (
+                    <span key={item} className="badge badge-soft">
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
