@@ -66,7 +66,11 @@ export default function Projects() {
 
   const languages = useMemo(() => {
     const langs = repos.map((repo) => repo.language).filter(Boolean);
-    return ["all", ...new Set(langs)];
+    const uniqueLangs = [...new Set(langs)];
+    if (!uniqueLangs.includes("javascript")) {
+      uniqueLangs.unshift("Javascript");
+    }
+    return ["all", ...uniqueLangs];
   }, [repos]);
 
   const paginatedRepos = useMemo(() => {
