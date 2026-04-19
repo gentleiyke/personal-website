@@ -1,0 +1,385 @@
+:root {
+  --bg: #071226;
+  --bg-soft: #0d1b34;
+  --card: #102445;
+  --card-2: #12305c;
+  --text: #f5f7fb;
+  --muted: #b8c4d9;
+  --line: rgba(255, 255, 255, 0.08);
+  --accent: #06B6D4;
+  --accent-2: #79b8ff;
+  --success: #35c48d;
+  --primary: #0F172A;
+  --background-light: #F8FAFC;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #06101f 0%, #0a1830 100%);
+  color: var(--text);
+  font-family: system-ui, Arial, sans-serif;
+}
+
+
+a {
+  text-decoration: none;
+}
+
+.site-shell {
+  min-height: 100vh;
+}
+
+.site-navbar {
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(6, 181, 212, 0.5);
+}
+
+.navbar-brand,
+.nav-link {
+  color: var(--text) !important;
+}
+
+.nav-link.active {
+  color: var(--accent-2) !important;
+  font-weight: 600;
+}
+
+.hero {
+  padding: 0;
+}
+
+.hero-full {
+  position: relative;
+  min-height: 95vh;
+  overflow: hidden;
+}
+
+.hero-slider {
+  display: flex;
+  transition: transform 0.8s ease;
+  min-height: 95vh;
+}
+
+.hero-slide {
+  min-height: 95vh;
+  width: 100%;
+  flex: 0 0 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.hero-slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 18, 38, 0.45);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 18, 38, 0.6);
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.hero-panel {
+  max-width: 680px;
+}
+
+.hero-copy {
+  max-width: 90%;
+}
+
+.carousel-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.carousel-controls button {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+}
+
+.carousel-controls button.active {
+  background: #4ea1ff;
+}
+
+.hero-stat-box {
+  min-height: 130px;
+}
+
+.bg-soft {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.competence-list li {
+  margin-bottom: 0.75rem;
+}
+
+.stack-list {
+  gap: 0.5rem;
+}
+
+.achievement-card {
+  min-height: 180px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.achievement-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+}
+
+.project-card-large {
+  min-height: 240px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.project-card-large:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+}
+
+.project-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.footer-social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.footer-social-links a:hover {
+  background: rgba(78, 161, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.navbar-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.btn-brand,
+.btn-outline-brand {
+  min-width: 160px;
+}
+
+.skill-progress .progress-bar {
+  min-width: 35px;
+}
+
+@media (max-width: 992px) {
+  .hero-overlay {
+    align-items: flex-start;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+  }
+}
+
+.section-space {
+  padding: 2rem 0 4rem;
+}
+
+.text-muted-custom {
+  color: var(--muted);
+}
+
+.btn-brand {
+  background: var(--accent);
+  color: white;
+  border: none;
+}
+
+.btn-brand:hover {
+  background: var(--accent-2);
+  color: white;
+}
+
+.btn-outline-brand {
+  border: 1px solid var(--accent);
+  color: var(--accent-2);
+}
+
+.btn-outline-brand:hover {
+  background: rgba(78, 161, 255, 0.12);
+  color: white;
+  border-color: var(--accent-2);
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.project-card {
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+}
+
+.project-thumb {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  background: #0b1730;
+}
+
+.badge-soft {
+  background: rgba(78, 161, 255, 0.14);
+  color: var(--accent-2);
+  border: 1px solid rgba(78, 161, 255, 0.25);
+}
+
+.footer {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.hero-simple {
+  padding: 4rem 0 2rem;
+  background: var(--bg);
+  text-align: center;
+}
+
+.hero-simple h1 {
+  color: var(--text);
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.hero-simple p {
+  color: var(--muted);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Modern Project Card Styles */
+.modern-project-card {
+  background: var(--background-light);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.modern-project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-thumbnail {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: var(--primary);
+}
+
+.card-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px;
+}
+
+.card-title {
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.card-description {
+  color: var(--primary);
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.card-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem;
+  align-items: center;
+}
+
+.stat-item {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.stat-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.stat-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modern-project-card {
+    padding: 16px;
+    flex-direction: column;
+  }
+
+  .card-thumbnail {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 12px;
+  }
+
+  .card-content {
+    margin-left: 0;
+  }
+
+  .card-stats {
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+  }
+}
