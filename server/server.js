@@ -46,4 +46,6 @@ mongoose
   })
   .catch((err) => console.error(err));
 
-
+app.get(/^\/(?!api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});

@@ -1,454 +1,768 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchGithubStats } from "../services/githubStats";
+import { Helmet } from "react-helmet-async";
+
 import { fetchRepos } from "../services/github";
+
+import slider01 from "../assets/slider-01.jpg";
+import slider02 from "../assets/slider-02.jpg";
+import slider03 from "../assets/slider-03.jpg";
+
+import dataAnalyticsImage from "../assets/home/data-analytics.jpg";
+import developmentImage from "../assets/home/development.jpg";
+import educationTrainingImage from "../assets/home/education-training.jpg";
+
+import homeModesBackground from "../assets/home/home-modes-bg.jpg";
+import homeCtaBackground from "../assets/home/home-cta-bg.jpg";
+
+import featuredProject01
+  from "../assets/home/featured-project-01.jpg";
+
+import featuredProject02
+  from "../assets/home/featured-project-02.jpg";
+
+import featuredProject03
+  from "../assets/home/featured-project-03.jpg";
+
+/* ======================================================
+   HERO SLIDES
+====================================================== */
 
 const slides = [
   {
-    title: "Creative digital solutions",
-    image:
-      "src/assets/slider-01.jpg",
+    title: "Data and analytics",
+    image: slider01,
   },
   {
-    title: "Built for modern businesses",
-    image:
-      "src/assets/slider-02.jpg",
+    title: "Digital solutions",
+    image: slider02,
   },
   {
-    title: "Reliable hosting & engineering",
-    image:
-      "src/assets/slider-03.jpg",
+    title: "Education and training",
+    image: slider03,
   },
 ];
 
-const skills = [
-  { name: "HTML5", level: 95 },
-  { name: "CSS3", level: 90 },
-  { name: "JavaScript", level: 85 },
-  { name: "Bootstrap", level: 90 },
-  { name: "React", level: 75 },
-  { name: "Node.js", level: 70 },
-  { name: "MySQL", level: 85 },
-  { name: "SQL", level: 85 },
-  { name: "Python", level: 80 },
-  { name: "R", level: 75 },
-  { name: "Machine Learning", level: 70 },
-  { name: "Statistical Analysis", level: 80 },
-  { name: "Data Modelling", level: 85 },
-  { name: "Predictive Modelling", level: 75 },
+
+/* ======================================================
+   SERVICE MODES
+====================================================== */
+
+const modes = [
+  {
+    number: "01",
+    title: "Data & Analytics",
+    description:
+      "Turning complex data into clear, actionable insight through analytics, automation, visualisation, machine learning, and evidence-led decision support.",
+    highlights: [
+      "Healthcare analytics",
+      "Data quality",
+      "Machine learning",
+      "BI & reporting",
+    ],
+    link: "/services",
+    image: dataAnalyticsImage,
+  },
+  {
+    number: "02",
+    title: "Development",
+    description:
+      "Building practical digital solutions that make data, workflows, and information easier to use, understand, and act on.",
+    highlights: [
+      "Data applications",
+      "Web applications",
+      "APIs",
+      "Digital tools",
+    ],
+    link: "/services",
+    image: developmentImage,
+  },
+  {
+    number: "03",
+    title: "Education & Training",
+    description:
+      "Making technical and analytical concepts practical through structured training, mentoring, facilitation, and applied learning.",
+    highlights: [
+      "Data education",
+      "Technical mentoring",
+      "Healthcare analytics",
+      "Professional training",
+    ],
+    link: "/services",
+    image: educationTrainingImage,
+  },
 ];
 
-const coreCompetencies = [
-  "Web & app development",
-  "API integration",
-  "Hosting & infrastructure",
-  "Performance optimization",
-  "Mentorship & training",
-  "Healthcare Analytics",
-  "Data Quality",
-  "Healthcare Informatics",
-  "Research Writing",
-  "Genomics",
-  "Bioinformatics",
-  "Stakeholder Management",
-  "Training and Facilitation",
-  "Data Storytelling",
+
+/* ======================================================
+   CREDIBILITY
+====================================================== */
+
+const credibility = [
+  {
+    value: "HCPC",
+    label: "Registered Biomedical Scientist",
+  },
+  {
+    value: "Research",
+    label: "Peer-reviewed publications",
+  },
+  {
+    value: "10+",
+    label: "Years across science, data & technology",
+  },
+  {
+    value: "Applied",
+    label: "Analytics, development & education",
+  },
 ];
 
-const techStack = [
-  "React",
-  "Node.js",
-  "Express",
-  "PHP",
-  "MySQL",
-  "Bootstrap",
-  "MongoDB",
-  "Git",
-  "Power BI",
-  "Tableau",
-  "Microsoft Excel",
-  "Microsoft Fabric",
-  "Python",
-  "R",
+
+/* ======================================================
+   FEATURED PUBLICATIONS
+====================================================== */
+
+const featuredPublications = [
+  {
+    title:
+      "Genomic Surveillance of Antimicrobial Resistance and Public Health Decision-Making",
+    type: "Review",
+    year: "2026",
+  },
+  {
+    title:
+      "Gene Editing Therapies for Sickle Cell Disease and β-Thalassemia",
+    type: "Systematic Review",
+    year: "2026",
+  },
+  {
+    title:
+      "Artificial Intelligence in Auditing and Financial Reporting",
+    type: "Scoping Review",
+    year: "2026",
+  },
 ];
 
-const achievements = [
-  { title: "Projects Done", value: "45+" },
-  { title: "Mentees / Students", value: "120+" },
-  { title: "Meetings", value: "300+" },
+const featuredProjectFallbacks = [
+  featuredProject01,
+  featuredProject02,
+  featuredProject03,
 ];
+
+/* ======================================================
+   HOME PAGE
+====================================================== */
 
 export default function Home() {
-  const [stats, setStats] = useState(null);
-  const [statsError, setStatsError] = useState(false);
   const [repos, setRepos] = useState([]);
   const [repoError, setRepoError] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
-  const [contactStatus, setContactStatus] = useState("idle");
-  const [contactError, setContactError] = useState("");
+
+
+  /* ------------------------------------------------------
+     LOAD GITHUB PROJECTS
+  ------------------------------------------------------ */
 
   useEffect(() => {
-    fetchGithubStats()
-      .then(setStats)
-      .catch((err) => {
-        console.error("Failed to load GitHub stats:", err);
-        setStatsError(true);
-      });
-
     fetchRepos()
       .then(setRepos)
-      .catch((err) => {
-        console.error("Failed to load GitHub repos:", err);
+      .catch((error) => {
+        console.error(
+          "Failed to load GitHub repositories:",
+          error
+        );
+
         setRepoError(true);
       });
   }, []);
 
+
+  /* ------------------------------------------------------
+     HERO SLIDER
+  ------------------------------------------------------ */
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((current) => (current + 1) % slides.length);
+      setCurrentSlide(
+        (current) =>
+          (current + 1) % slides.length
+      );
     }, 6000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
-  const recentRepos = useMemo(() => {
-    return repos.slice(0, 4);
+
+  /* ------------------------------------------------------
+     FEATURED PROJECTS
+  ------------------------------------------------------ */
+
+  const featuredRepos = useMemo(() => {
+    return repos.slice(0, 3);
   }, [repos]);
 
-  function handleContactChange(e) {
-    setContactForm({ ...contactForm, [e.target.name]: e.target.value });
-  }
-
-  async function handleContactSubmit(e) {
-    e.preventDefault();
-    setContactError("");
-
-    if (!contactForm.name || !contactForm.email || !contactForm.message) {
-      setContactError("Please complete all fields.");
-      return;
-    }
-
-    setContactStatus("sending");
-
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/contact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(contactForm),
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "Unable to send message.");
-      }
-
-      setContactStatus("sent");
-      setContactForm({ name: "", email: "", message: "" });
-    } catch (err) {
-      setContactStatus("error");
-      setContactError(err.message);
-    }
-  }
 
   return (
     <>
-      <section className="hero hero-full">
+      {/* ==================================================
+          SEO
+      =================================================== */}
+
+      <Helmet>
+        <title>
+          Ikemefula Oriaku | Data, AI, Development & Education
+        </title>
+
+        <meta
+          name="description"
+          content="Ikemefula Oriaku is a data and AI professional, developer, biomedical scientist, and educator working across analytics, digital solutions, healthcare, and technical training."
+        />
+      </Helmet>
+
+
+      {/* ==================================================
+          HERO
+      =================================================== */}
+
+      <section className="hero hero-full home-hero">
+
         <div
           className="hero-slider"
-          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          style={{
+            transform: `translateX(-${currentSlide * 100}%)`,
+          }}
         >
-          {slides.map((slide, idx) => (
+          {slides.map((slide) => (
             <div
               key={slide.title}
               className="hero-slide"
-              style={{ backgroundImage: `url(${slide.image})` }}
+              style={{
+                backgroundImage: `url(${slide.image})`,
+              }}
             >
               <div className="hero-slide-overlay" />
             </div>
           ))}
         </div>
 
-        <div className="hero-overlay container-fluid px-0">
+
+        <div className="hero-overlay">
+
           <div className="container">
-            <div className="row align-items-center gy-4">
-              <div className="col-lg-7">
+
+            <div className="row align-items-center gy-5">
+
+              <div className="col-lg-8">
+
                 <div className="hero-panel">
-                  <p className="eyebrow text-info text-uppercase fw-semibold mb-3">
-                    Web Developer • Data Scientist • IT Systems & Hosting Specialist
+
+                  <p className="section-eyebrow mb-3">
+                    Data & AI Professional · Builder · Educator
                   </p>
-                  <h1 className="display-4 fw-bold mb-4">
-                    Building digital solutions that solves problems with a modern touch.
+
+                  <h1 className="home-hero-title">
+                    I turn data into insight,
+                    insight into digital solutions,
+                    and complex ideas into practical
+                    learning.
                   </h1>
-                  <p className="lead text-muted-custom mb-4 hero-copy">
-                    I'm Ikemefula Oriaku. I am a Soloprenuer passionate about building impactful digital solutions and sharing knowledge.
-                    I build websites, web apps, data projects, IT systems, and managed hosting solutions. 
+
+                  <p className="home-hero-copy">
+                    I work across data analytics,
+                    artificial intelligence, digital
+                    development, and professional
+                    education, with a particular
+                    interest in healthcare, life
+                    sciences, and evidence-led problem
+                    solving.
                   </p>
-                  <div className="d-flex flex-wrap gap-3 mb-4">
-                    <Link to="/projects" className="btn btn-brand px-4 py-3">
-                      View Projects
-                    </Link>
-                    <Link to="/contact" className="btn btn-outline-brand px-4 py-3">
-                      Get in Touch
-                    </Link>
-                    <a
-                      href="https://ikemefulaoriaku.space/thumbs/IkemefulaORIAKU_GC.pdf"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn btn-outline-light px-4 py-3"
+
+
+                  <div className="d-flex flex-wrap gap-3 mt-4">
+
+                    <Link
+                      to="/contact"
+                      className="btn btn-brand px-4 py-3"
                     >
-                      Download CV
-                    </a>
+                      Work With Me
+                    </Link>
+
+                    <Link
+                      to="/projects"
+                      className="btn btn-outline-brand px-4 py-3"
+                    >
+                      Explore My Work
+                    </Link>
+
                   </div>
+
+
+                  <a
+                    href="https://ikemefulaoriaku.space/thumbs/IkemefulaORIAKU_GC.pdf"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hero-cv-link d-inline-block mt-4"
+                  >
+                    View CV →
+                  </a>
+
                 </div>
+
               </div>
 
-              <div className="col-lg-5">
-                <div className="row g-3 stats-grid">
-                  <div className="col-6">
-                    <div className="stat-box hero-stat-box">
-                      <h3 className="fw-bold mb-1">20+</h3>
-                      <p className="mb-0 text-muted-custom">Years Experience</p>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="stat-box hero-stat-box">
-                      <h3 className="fw-bold mb-1">{statsError ? "N/A" : stats?.repos ?? "-"}</h3>
-                      <p className="mb-0 text-muted-custom">Public Repos</p>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="stat-box hero-stat-box">
-                      <h3 className="fw-bold mb-1">Full Stack</h3>
-                      <p className="mb-0 text-muted-custom">Total Stack</p>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="stat-box hero-stat-box">
-                      <h3 className="fw-bold mb-1">{statsError ? "N/A" : stats?.stars ?? "-"}</h3>
-                      <p className="mb-0 text-muted-custom">Total Stars</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
+
 
             <div className="carousel-controls">
-              {slides.map((_, idx) => (
+
+              {slides.map((slide, index) => (
                 <button
-                  key={idx}
+                  key={slide.title}
                   type="button"
-                  className={currentSlide === idx ? "active" : ""}
-                  onClick={() => setCurrentSlide(idx)}
+                  className={
+                    currentSlide === index
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    setCurrentSlide(index)
+                  }
+                  aria-label={`Show ${slide.title}`}
+                  aria-pressed={
+                    currentSlide === index
+                  }
                 />
               ))}
+
             </div>
+
           </div>
+
         </div>
+
       </section>
 
-      <section className="section-space bg-soft">
-        <div className="container">
-          <div className="row gy-4">
-            <div className="col-lg-6">
-              <div className="glass-card p-4">
-                <h2 className="fw-bold mb-3">About Me</h2>
-                <p className="text-muted-custom mb-4">
-                  I help businesses and individuals build elegant websites, web applications, data tools, and managed hosting systems with a strong focus on performance and reliability.
-                </p>
-                <h5 className="mb-3">Core Competencies</h5>
-                <div className="row">
-                  <div className="col-6">
-                    <ul className="list-unstyled text-muted-custom mb-4 competence-list">
-                      {coreCompetencies.slice(0, Math.ceil(coreCompetencies.length / 2)).map((item) => (
-                        <li key={item}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="col-6">
-                    <ul className="list-unstyled text-muted-custom mb-4 competence-list">
-                      {coreCompetencies.slice(Math.ceil(coreCompetencies.length / 2)).map((item) => (
-                        <li key={item}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div className="col-lg-6">
-              <div className="glass-card p-4">
-                <h2 className="fw-bold mb-3">Skills</h2>
-                <div className="row">
-                  <div className="col-6">
-                    {skills.slice(0, Math.ceil(skills.length / 2)).map((skill) => (
-                      <div key={skill.name} className="mb-2">
-                        <div className="d-flex justify-content-between mb-1">
-                          <span>{skill.name}</span>
-                          <span>{skill.level}%</span>
-                        </div>
-                        <div className="progress skill-progress">
-                          <div
-                            className="progress-bar"
-                            role="progressbar"
-                            style={{ width: `${skill.level}%` }}
-                            aria-valuenow={skill.level}
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="col-6">
-                    {skills.slice(Math.ceil(skills.length / 2)).map((skill) => (
-                      <div key={skill.name} className="mb-2">
-                        <div className="d-flex justify-content-between mb-1">
-                          <span>{skill.name}</span>
-                          <span>{skill.level}%</span>
-                        </div>
-                        <div className="progress skill-progress">
-                          <div
-                            className="progress-bar"
-                            role="progressbar"
-                            style={{ width: `${skill.level}%` }}
-                            aria-valuenow={skill.level}
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <h5 className="mb-3 mt-4">Tech Stack</h5>
-                <div className="d-flex flex-wrap gap-2 stack-list">
-                  {techStack.map((item) => (
-                    <span key={item} className="badge badge-soft">
-                      {item}
+      {/* ==================================================
+          SERVICES / MODES
+      =================================================== */}
+
+      <section
+        className="section-space home-modes"
+        style={{
+          backgroundImage: `
+            linear-gradient(
+              rgba(15, 23, 42, 0.80),
+              rgba(15, 23, 42, 0.84)
+            ),
+            url(${homeModesBackground})
+          `,
+        }}
+      >
+
+        <div className="container">
+
+          <div className="section-heading mb-5">
+
+            <p className="section-eyebrow">
+              What I Do
+            </p>
+
+            <h2>
+              Analyse. Build. Teach.
+            </h2>
+
+            <p>
+              Three connected ways I apply the same
+              problem-solving mindset.
+            </p>
+
+          </div>
+
+
+          <div className="row g-4">
+
+            {modes.map((mode) => (
+
+              <div
+                key={mode.title}
+                className="col-lg-4"
+              >
+
+                <article className="brand-card mode-card">
+
+                  {/* CARD 2 IMAGE AREA */}
+
+                  <div className="mode-card-media">
+
+                    <img
+                      src={mode.image}
+                      alt=""
+                      loading="lazy"
+                    />
+
+                    <span className="mode-number">
+                      {mode.number}
                     </span>
-                  ))}
-                </div>
+
+                  </div>
+
+
+                  {/* CARD CONTENT */}
+
+                  <div className="mode-card-body">
+
+                    <h3>
+                      {mode.number} - {mode.title}
+                    </h3>
+
+                    <p>
+                      {mode.description}
+                    </p>
+
+
+                    <ul className="mode-highlights">
+
+                      {mode.highlights.map(
+                        (highlight) => (
+                          <li key={highlight}>
+                            {highlight}
+                          </li>
+                        )
+                      )}
+
+                    </ul>
+
+
+                    <Link
+                      to={mode.link}
+                      className="mode-link"
+                    >
+                      Explore services →
+                    </Link>
+
+                  </div>
+
+                </article>
+
               </div>
-            </div>
+
+            ))}
+
           </div>
+
         </div>
+
       </section>
+
+
+      {/* ==================================================
+          CREDIBILITY
+      =================================================== */}
+
+      <section className="credibility-section">
+
+        <div className="container">
+
+          <div className="row g-0">
+
+            {credibility.map((item) => (
+
+              <div
+                key={item.label}
+                className="col-6 col-lg-3"
+              >
+
+                <div className="credibility-item">
+
+                  <strong>
+                    {item.value}
+                  </strong>
+
+                  <span>
+                    {item.label}
+                  </span>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ==================================================
+          FEATURED PROJECTS
+      =================================================== */}
 
       <section className="section-space">
-        <div className="container">
-          <h2 className="fw-bold mb-4">Achievements</h2>
-          <div className="row g-4">
-            {achievements.map((achievement) => (
-              <div key={achievement.title} className="col-md-4">
-                <div className="achievement-card glass-card p-4 text-center">
-                  <h3 className="display-6 fw-bold mb-2">{achievement.value}</h3>
-                  <p className="mb-0 text-muted-custom">{achievement.title}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="section-space bg-soft">
         <div className="container">
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mb-4">
+
+          <div className="section-heading section-heading-row">
+
             <div>
-              <h2 className="fw-bold mb-1">Recent Projects</h2>
-              <p className="text-muted-custom mb-0">A selection of the most recent repositories from GitHub.</p>
+
+              <p className="section-eyebrow">
+                Selected Work
+              </p>
+
+              <h2>
+                Problems solved through data and technology.
+              </h2>
+
+              <p>
+                A selection of practical projects,
+                analyses, and digital solutions.
+              </p>
+
             </div>
-            {repoError && <p className="text-danger mb-0">Unable to load recent projects.</p>}
+
+
+            <Link
+              to="/projects"
+              className="section-link"
+            >
+              View all projects →
+            </Link>
+
           </div>
-          <div className="row g-4">
-            {recentRepos.map((repo) => (
-              <div key={repo.id} className="col-md-6">
-                <a href={repo.url} target="_blank" rel="noreferrer" className="project-card-link">
-                  <div className="modern-project-card">
-                    <div className="card-thumbnail">
-                      <img src="src/assets/portfolio-image.png" alt="Project thumbnail" />
-                    </div>
-                    <div className="card-content">
-                      <h5 className="card-title">{repo.name}</h5>
-                      <p className="card-description">{repo.description || "No description available."}</p>
-                      <div className="card-stats">
-                        <span className="stat-item">Likes: {repo.stars}</span>
-                        <a href={repo.url} className="stat-link">Repo</a>
-                        <span className="stat-item">Stars: {repo.stars}</span>
-                      </div>
-                    </div>
+
+
+          {repoError && (
+            <p
+              className="text-muted-custom"
+              role="status"
+            >
+              Project data is temporarily unavailable.
+            </p>
+          )}
+
+
+          <div className="row g-4 mt-2">
+
+            {featuredRepos.map((repo, index) => (
+
+              <div
+                key={repo.id}
+                className="col-lg-4"
+              >
+
+                <article className="featured-project-card">
+
+                  {/* CARD 2 IMAGE AREA */}
+
+                  <div className="featured-project-media">
+
+                    <img
+                      src={
+                        repo.thumbnail ||
+                        featuredProjectFallbacks[index]
+                      }
+                      alt=""
+                      loading="lazy"
+                    />
+
+                    <span className="featured-project-category">
+                      {repo.language || "Project"}
+                    </span>
+
                   </div>
-                </a>
+
+
+                  {/* CARD CONTENT */}
+
+                  <div className="featured-project-body">
+
+                    <p className="featured-project-type">
+                      Featured Project
+                    </p>
+
+                    <h3>
+                      {repo.name}
+                    </h3>
+
+                    <p className="featured-project-description">
+                      {repo.description ||
+                        "A practical project exploring data, technology, and digital problem solving."}
+                    </p>
+
+
+                    <div className="featured-project-meta">
+
+                      {repo.language && (
+                        <span>
+                          {repo.language}
+                        </span>
+                      )}
+
+                      <span>
+                        ★ {repo.stars || 0}
+                      </span>
+
+                    </div>
+
+
+                    <a
+                      href={repo.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="featured-project-link"
+                    >
+                      View project →
+                    </a>
+
+                  </div>
+
+                </article>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
+
       </section>
 
-      <section className="section-space">
+
+      {/* ==================================================
+          PUBLICATIONS
+      =================================================== */}
+
+      <section className="section-space publications-preview">
+
         <div className="container">
-          <div className="row align-items-center gy-4">
-            <div className="col-lg-6">
-              <div className="glass-card p-4">
-                <h2 className="fw-bold mb-3">Get in touch</h2>
-                <p className="text-muted-custom mb-4">
-                  Have a project in mind or want to collaborate? Send a quick message and I’ll get back to you shortly.
-                </p>
-                <form onSubmit={handleContactSubmit} className="row g-3">
-                  <div className="col-12">
-                    <input
-                      name="name"
-                      value={contactForm.name}
-                      onChange={handleContactChange}
-                      className="form-control"
-                      placeholder="Your name"
-                    />
-                  </div>
-                  <div className="col-12">
-                    <input
-                      name="email"
-                      type="email"
-                      value={contactForm.email}
-                      onChange={handleContactChange}
-                      className="form-control"
-                      placeholder="Your email"
-                    />
-                  </div>
-                  <div className="col-12">
-                    <textarea
-                      name="message"
-                      rows="5"
-                      value={contactForm.message}
-                      onChange={handleContactChange}
-                      className="form-control"
-                      placeholder="Your message"
-                    />
-                  </div>
-                  {contactError && <p className="text-danger mb-0">{contactError}</p>}
-                  <div className="col-12">
-                    <button type="submit" className="btn btn-brand px-4" disabled={contactStatus === "sending"}>
-                      {contactStatus === "sending" ? "Sending..." : "Send Message"}
-                    </button>
-                    {contactStatus === "sent" && <p className="text-success mt-3 mb-0">Message sent successfully!</p>}
-                  </div>
-                </form>
-              </div>
+
+          <div className="section-heading section-heading-row">
+
+            <div>
+
+              <p className="section-eyebrow">
+                Research
+              </p>
+
+              <h2>
+                Evidence-led thinking.
+              </h2>
+
+              <p>
+                Selected research and scholarly work
+                across healthcare, biomedical science,
+                data, and AI.
+              </p>
+
             </div>
-            <div className="col-lg-6">
-              <div className="glass-card p-4 h-100 d-flex flex-column justify-content-center">
-                <h2 className="fw-bold mb-3">Quick contact</h2>
-                <p className="text-muted-custom mb-4">
-                  Email me at <a href="mailto:hello@ikemefulaoriaku.space">hello@ikemefulaoriaku.space</a> or connect on any of the social platforms below.
-                </p>
-                <div className="d-flex flex-wrap gap-2">
-                  <span className="badge badge-soft">Modern web design</span>
-                  <span className="badge badge-soft">Data-driven apps</span>
-                  <span className="badge badge-soft">Hosting & operations</span>
-                  <span className="badge badge-soft">Training & mentorship</span>
-                </div>
-              </div>
-            </div>
+
+
+            <Link
+              to="/publications"
+              className="section-link"
+            >
+              View publications →
+            </Link>
+
           </div>
+
+
+          <div className="publication-preview-list mt-4">
+
+            {featuredPublications.map(
+              (publication) => (
+
+                <article
+                  key={publication.title}
+                  className="publication-preview-item"
+                >
+
+                  <div>
+
+                    <span className="publication-meta">
+                      {publication.type} ·{" "}
+                      {publication.year}
+                    </span>
+
+                    <h3>
+                      {publication.title}
+                    </h3>
+
+                  </div>
+
+
+                  <span
+                    className="publication-arrow"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+
+                </article>
+
+              )
+            )}
+
+          </div>
+
         </div>
+
+      </section>
+
+
+      {/* ==================================================
+          FINAL CTA
+      =================================================== */}
+
+      <section
+        className="home-cta"
+        style={{
+          backgroundImage: `
+            linear-gradient(
+              rgba(15, 23, 42, 0.72),
+              rgba(15, 23, 42, 0.82)
+            ),
+            url(${homeCtaBackground})
+          `,
+        }}
+      >
+
+        <div className="container">
+
+          <div className="home-cta-inner">
+
+            <p className="section-eyebrow">
+              Work Together
+            </p>
+
+            <h2>
+              Have a data problem, digital idea,
+              or training need?
+            </h2>
+
+            <p>
+              Let’s discuss what you are trying to
+              achieve and where data, technology,
+              or education can help.
+            </p>
+
+            <Link
+              to="/contact"
+              className="btn btn-brand px-4 py-3"
+            >
+              Start a Conversation
+            </Link>
+
+          </div>
+
+        </div>
+
       </section>
     </>
   );
